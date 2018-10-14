@@ -1,0 +1,212 @@
+-- Database: onco_cure_assist
+
+-- DROP DATABASE onco_cure_assist;
+
+CREATE DATABASE onco_cure_assist
+    WITH 
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'English_United States.1252'
+    LC_CTYPE = 'English_United States.1252'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1;
+	
+	
+	
+	-- Table: public.diagnostics
+
+-- DROP TABLE public.diagnostics;
+
+CREATE TABLE public.diagnostics
+(
+    id bigint NOT NULL DEFAULT nextval('diagnostics_id_seq'::regclass),
+    patient_id bigint NOT NULL,
+    "TNM" character varying(16) COLLATE pg_catalog."default" NOT NULL,
+    primary_tumour bit(8) NOT NULL,
+    regional_lymph_nodes bit(8) NOT NULL,
+    distant_metastasis bit(8) NOT NULL,
+    tumour_size integer NOT NULL,
+    side bit(8) NOT NULL,
+    bronchial_carcinoma boolean,
+    lung_carcinoma boolean,
+    peribroncial_carcinoma boolean,
+    interlobar boolean,
+    subcarinal boolean,
+    lower_paratracheal boolean,
+    upper_paratracheal boolean,
+    same_lung_metastasis boolean,
+    symptoms boolean,
+    "VLC" double precision,
+    "TVC" double precision,
+    "TIFF_number" double precision,
+    volume_force_exp double precision,
+    heart_rate integer,
+    heart_block boolean,
+    extrasistols boolean,
+    arythmya boolean,
+    somatic boolean,
+    "BAC" boolean,
+    onco_anamesys boolean,
+    stage character varying(16) COLLATE pg_catalog."default",
+    respiratory_system_diseases integer[],
+    vascular_diseases integer[],
+    breathing_organs_diseases integer[],
+    ag boolean,
+    heart_diseases integer[],
+    blood_diseases integer[],
+    digestive_system_diseases integer[],
+    diabetes boolean,
+    endocrine_system_diseases integer[],
+    stroke_consequences integer[],
+    nervous_system_diseases integer[],
+    genitourinary_system_diseases integer[],
+    rheumatic_diseases integer[],
+    musculoskeletal_system_diseases integer[],
+    others_diseases integer[],
+    complains boolean DEFAULT false,
+    grade integer,
+    atherosclerosis integer[],
+    miocard_diseases integer[],
+    ulcer_disease boolean,
+    tuberculosis integer[],
+    histo_benign_tumor integer[],
+    histo_non_lung_tumor integer[],
+    histology_diagnosis integer,
+    smoking boolean,
+    histology_code character varying(64) COLLATE pg_catalog."default",
+    CONSTRAINT diagnostics_pkey PRIMARY KEY (id),
+    CONSTRAINT patient_fk FOREIGN KEY (patient_id)
+        REFERENCES public.patient (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.diagnostics
+    OWNER to postgres;
+	
+-- Table: public.genetic_predictors
+
+-- DROP TABLE public.genetic_predictors;
+
+CREATE TABLE public.genetic_predictors
+(
+    id bigint NOT NULL DEFAULT nextval('genetic_predictors_id_seq'::regclass),
+    patient_id bigint NOT NULL,
+    vegf_634 character varying(64) COLLATE pg_catalog."default",
+    vegf_2578 character varying(64) COLLATE pg_catalog."default",
+    vegf_936 character varying(64) COLLATE pg_catalog."default",
+    egf character varying(64) COLLATE pg_catalog."default",
+    gstt character varying(64) COLLATE pg_catalog."default",
+    gstm character varying(64) COLLATE pg_catalog."default",
+    gstp character varying(64) COLLATE pg_catalog."default",
+    natkpn character varying(64) COLLATE pg_catalog."default",
+    nattag character varying(64) COLLATE pg_catalog."default",
+    natbam character varying(64) COLLATE pg_catalog."default",
+    acetylation_type character varying(64) COLLATE pg_catalog."default",
+    cyp_1a2 character varying(64) COLLATE pg_catalog."default",
+    cyp_2d6 character varying(64) COLLATE pg_catalog."default",
+    mdr character varying(64) COLLATE pg_catalog."default",
+    egfr_18_tumor character varying(64) COLLATE pg_catalog."default",
+    egfr_18_norm character varying(64) COLLATE pg_catalog."default",
+    egfr_19_tumor character varying(64) COLLATE pg_catalog."default",
+    egfr_19_norm character varying(64) COLLATE pg_catalog."default",
+    egfr_20_tumor character varying(64) COLLATE pg_catalog."default",
+    egfr_20_norm character varying(64) COLLATE pg_catalog."default",
+    egfr_21_tumor character varying(64) COLLATE pg_catalog."default",
+    egfr_21_norm character varying(64) COLLATE pg_catalog."default",
+    egfr_21_blood character varying(64) COLLATE pg_catalog."default",
+    tgf_509 character varying(64) COLLATE pg_catalog."default",
+    tgf_25_codon character varying(64) COLLATE pg_catalog."default",
+    tgfr_206 character varying(64) COLLATE pg_catalog."default",
+    kdr_1719 character varying(64) COLLATE pg_catalog."default",
+    kdr_906 character varying(64) COLLATE pg_catalog."default",
+    sult1 character varying(64) COLLATE pg_catalog."default",
+    mmp9_2660 character varying(64) COLLATE pg_catalog."default",
+    mmp9_1562 character varying(64) COLLATE pg_catalog."default",
+    mmp2_735 character varying(64) COLLATE pg_catalog."default",
+    "ММp2_1575" character varying(64) COLLATE pg_catalog."default",
+    kras_2ex_tumor character varying(64) COLLATE pg_catalog."default",
+    kras_2ex_norm character varying(64) COLLATE pg_catalog."default",
+    pik3ca_9ex character varying(64) COLLATE pg_catalog."default",
+    pik3ca_20ex character varying(64) COLLATE pg_catalog."default",
+    pten character varying(64) COLLATE pg_catalog."default",
+    dnmt_149 character varying(64) COLLATE pg_catalog."default",
+    dnmt_579 character varying(64) COLLATE pg_catalog."default",
+    CONSTRAINT genetic_predictor_pkey PRIMARY KEY (id),
+    CONSTRAINT patient_fkey FOREIGN KEY (patient_id)
+        REFERENCES public.patient (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.genetic_predictors
+    OWNER to postgres;
+	
+	
+-- Table: public.patient
+
+-- DROP TABLE public.patient;
+
+CREATE TABLE public.patient
+(
+    id bigint NOT NULL DEFAULT nextval('patient_id_seq'::regclass),
+    full_name text COLLATE pg_catalog."default" NOT NULL,
+    gender integer NOT NULL,
+    birth_date date NOT NULL,
+    contact_date date NOT NULL,
+    alive boolean NOT NULL,
+    survival_month double precision NOT NULL,
+    employed boolean,
+    profession_code integer,
+    address character varying(512) COLLATE pg_catalog."default",
+    phone character varying(128) COLLATE pg_catalog."default",
+    patient_card_number character varying(64) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT patient_pkey PRIMARY KEY (id)
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.patient
+    OWNER to postgres;
+	
+	-- Table: public.treatment
+
+-- DROP TABLE public.treatment;
+
+CREATE TABLE public.treatment
+(
+    id bigint NOT NULL DEFAULT nextval('treatment_id_seq'::regclass),
+    surgery_applied boolean NOT NULL,
+    chemotherapy_applied boolean NOT NULL,
+    radiation_therapy_applied boolean,
+    surgery_code integer,
+    surgeon_name character varying COLLATE pg_catalog."default",
+    patient_id bigint NOT NULL,
+    surgery_date date,
+    first_line_course integer,
+    second_line_course integer,
+    third_line_course integer,
+    CONSTRAINT treatment_pkey PRIMARY KEY (id),
+    CONSTRAINT patient_fk FOREIGN KEY (patient_id)
+        REFERENCES public.patient (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+WITH (
+    OIDS = FALSE
+)
+TABLESPACE pg_default;
+
+ALTER TABLE public.treatment
+    OWNER to postgres;
+	
